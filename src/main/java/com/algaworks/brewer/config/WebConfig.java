@@ -5,6 +5,7 @@ import com.algaworks.brewer.controllers.CidadesController;
 import com.algaworks.brewer.controllers.ClientesController;
 import com.algaworks.brewer.controllers.UsuariosController;
 import com.algaworks.brewer.controllers.converter.EstiloConverter;
+import com.algaworks.brewer.thymeleaf.dialect.BrewerDialect;
 import com.sun.corba.se.spi.resolver.LocalResolver;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.BeansException;
@@ -58,6 +59,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         engine.setEnableSpringELCompiler(true);
         engine.setTemplateResolver(templateResolver());
         engine.addDialect(new LayoutDialect());
+        engine.addDialect(new BrewerDialect());
         return engine;
     }
 
