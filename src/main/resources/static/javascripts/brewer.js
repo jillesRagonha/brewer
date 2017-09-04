@@ -1,20 +1,22 @@
 var Brewer = Brewer || {};
-Brewer.MaskMoney = (function () {
-	function MaskMoney() {
+
+Brewer.MaskMoney = (function() {
+
+    function MaskMoney() {
         this.decimal = $('.js-decimal');
         this.plain = $('.js-plain');
     }
 
-    MaskMoney.prototype.enable() = function () {
-        this.decimal.maskMoney({decimal: ',', thousands: '.'});
-
+    MaskMoney.prototype.enable = function() {
+        this.decimal.maskMoney({ decimal: ',', thousands: '.' });
         this.plain.maskMoney({ precision: 0, thousands: '.' });
     }
 
-    return maskMoney();
+    return MaskMoney;
+
 }());
 
 $(function() {
-    var maskMoney = Brewer.maskMoney();
+    var maskMoney = new Brewer.MaskMoney();
     maskMoney.enable();
 });
