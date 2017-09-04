@@ -94,6 +94,9 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-validator/5.2.4.FINAL/hibernate-validator-5.2.4.FINAL-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-validator/5.2.4.FINAL/hibernate-validator-5.2.4.FINAL-javadoc.jar!/" />
       <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-validator/5.2.4.FINAL/hibernate-validator-5.2.4.FINAL-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-validator/5.2.4.FINAL/hibernate-validator-5.2.4.FINAL-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-validator/5.2.4.FINAL/hibernate-validator-5.2.4.FINAL-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-validator/5.2.4.FINAL/hibernate-validator-5.2.4.FINAL-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/hibernate-validator/5.2.4.Final/hibernate-validator-5.2.4.Final-sources.jar!/" />

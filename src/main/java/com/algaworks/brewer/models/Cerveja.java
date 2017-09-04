@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class Cerveja {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
 
     @SKU
@@ -25,7 +25,7 @@ public class Cerveja {
     @NotBlank(message = "Preencha o campo nome")
     private String nome;
 
-    @Size(min = 1 , max = 100, message = "O campo descrição deve conter de 0 à 100 caracteres")
+    @Size(min = 1, max = 100, message = "O campo descrição deve conter de 0 à 100 caracteres")
     private String descricao;
 
     @NotNull(message = "Valor do produto está vazio, preencha corretamente")
@@ -163,5 +163,11 @@ public class Cerveja {
     @Override
     public int hashCode() {
         return codigo != null ? codigo.hashCode() : 0;
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void prePersistUpdate() {
+        sku = sku.toUpperCase();
     }
 }
