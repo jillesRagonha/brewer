@@ -39,6 +39,7 @@ public class JPAConfig {
         adapter.setGenerateDdl(false);
         adapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
         return adapter;
+
     }
 
     @Bean
