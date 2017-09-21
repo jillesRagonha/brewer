@@ -4,6 +4,7 @@ package com.algaworks.brewer.models;
 import com.algaworks.brewer.validation.SKU;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -66,7 +67,12 @@ public class Cerveja {
     private String contentType;
 
     public String getFoto() {
+
         return foto;
+    }
+
+    public String getFotoOuMock() {
+        return !StringUtils.isEmpty(foto) ? foto : "cerveja-mock.png";
     }
 
     public void setFoto(String foto) {

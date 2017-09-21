@@ -1,6 +1,8 @@
 package com.algaworks.brewer.storage.local;
 
 import com.algaworks.brewer.storage.FotoStorage;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.name.Rename;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +31,31 @@ public class FotoStorageLocal implements FotoStorage {
     public FotoStorageLocal(Path path) {
         this.local = path;
         criarPastas();
+    }
+
+
+    @Override
+    public void salvar(String foto) {
+        try {
+            Files.move(this.localTemporario.resolve(foto), this.local.resolve(foto));
+        } catch (IOException e) {
+            throw new RuntimeException("Erro movendo a foto para destino final");
+        }
+
+        try {
+            Thumbnails.of(this.local.resolve(foto).toString()).size(40,68).toFiles(Rename.PREFIX_DOT_THUMBNAIL);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro criando o thumbnail");
+        }
+    }
+
+    @Override
+    public byte[] recuperar(String foto) {
+        try {
+            return Files.readAllBytes(this.local.resolve(foto));
+        } catch (IOException e) {
+            throw new RuntimeException("Erro lendo a foto : " + e);
+        }
     }
 
     private void criarPastas() {
@@ -79,4 +106,5 @@ public class FotoStorageLocal implements FotoStorage {
             throw new RuntimeException("Erro lendo a foto temporaria: " + e);
         }
     }
+
 }

@@ -15,7 +15,7 @@ public class Estilo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long codigo;
+    private Long codigo;
 
     @Size(max = 35, min = 1, message = "O campo precisa ter no máximo 35 caracteres e no mínimo 1")
     private String nome;
@@ -23,7 +23,7 @@ public class Estilo implements Serializable {
     @OneToMany(mappedBy = "estilo")
     private List<Cerveja> cervejas;
 
-    public long getCodigo() {
+    public Long getCodigo() {
         return codigo;
     }
 

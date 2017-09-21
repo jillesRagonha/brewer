@@ -31,6 +31,7 @@
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-slf4j-impl:2.6" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.6" />
           <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.6" />
+          <element id="library" level="project" name="Maven: net.coobird:thumbnailator:0.4.8" />
           <element id="library" level="project" name="Maven: org.slf4j:jcl-over-slf4j:1.7.21" />
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-entitymanager:5.1.0.Final" />
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:5.1.0.Final" />
