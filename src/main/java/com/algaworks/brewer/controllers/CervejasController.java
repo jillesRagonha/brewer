@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/cervejas")
 public class CervejasController {
 
     @Autowired
@@ -33,7 +35,7 @@ public class CervejasController {
     private static final Logger logger = LoggerFactory.getLogger(CervejasController.class);
 
     //Método chamado pelo Spring quando eu fizer uma requisição do tipo GET
-    @RequestMapping("/cervejas/novo")
+    @RequestMapping("/novo")
     public ModelAndView novo(Cerveja cerveja) {
 
         ModelAndView mv = new ModelAndView("cerveja/CadastroCerveja");
@@ -44,7 +46,7 @@ public class CervejasController {
     }
 
     //Método chamado pelo Spring quando eu fizer uma requisição do tipo POST na mesma url
-    @RequestMapping(value = "/cervejas/novo", method = RequestMethod.POST)
+    @RequestMapping(value = "/novo", method = RequestMethod.POST)
     public ModelAndView cadastrarCerveja(@Valid Cerveja cerveja, BindingResult result, Model model, RedirectAttributes attributes) {
         if (result.hasErrors()) {
             return novo(cerveja);
@@ -52,6 +54,16 @@ public class CervejasController {
         service.salvar(cerveja);
         attributes.addFlashAttribute("mensagem", "Cerveja salva com sucesso - CUZAO");
         return new ModelAndView("redirect:/cervejas/novo");
+    }
+
+    @GetMapping
+    public ModelAndView pesquisar(){
+        ModelAndView modelAndView = new ModelAndView("cerveja/PesquisaCerveja");
+        modelAndView.addObject("sabores", Sabor.values());
+        modelAndView.addObject("estilos", estilos.findAll());
+        modelAndView.addObject("origem", Origem.values());
+        modelAndView.addObject("cervejas", cervejas.findAll());
+        return  modelAndView;
     }
 
 }
