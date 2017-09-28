@@ -2,14 +2,18 @@ package com.algaworks.brewer.repository.helper.cerveja;
 
 import com.algaworks.brewer.models.Cerveja;
 import com.algaworks.brewer.repository.filter.CervejaFilter;
+import com.algaworks.brewer.repository.paginacao.PaginacaoUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -22,17 +26,19 @@ public class CervejasImpl implements CervejasQueries {
     @PersistenceContext
     private EntityManager manager;
 
+    @Autowired
+    private PaginacaoUtil paginacaoUtil;
+
     @Override
     @Transactional(readOnly = true)
     public Page<Cerveja> filtrar(CervejaFilter filter, Pageable pageable) {
         Criteria criteria = manager.unwrap(Session.class).createCriteria(Cerveja.class);
-        int totalRegistrosPorPaginas = pageable.getPageSize();
-        int paginaAtual = pageable.getPageNumber();
-        int primeiroRegistro = paginaAtual * totalRegistrosPorPaginas;
 
-        criteria.setFirstResult(primeiroRegistro);
-        criteria.setMaxResults(totalRegistrosPorPaginas);
+        paginacaoUtil.preparar(criteria,pageable);
+
         adicionarFiltro(filter, criteria);
+
+
         return new PageImpl<Cerveja>(criteria.list(), pageable, total(filter));
     }
 

@@ -101,8 +101,13 @@
                 <thead>
                 <tr>
                     <th class="table-cervejas-col-foto"></th>
-                    <th class="table-cervejas-col-sku">SKU</th>
-                    <th class="table-cervejas-col-nome">Nome</th>
+                    <th class="table-cervejas-col-sku">
+                        <!--<th:block th:replace="fragments/Ordenacao :: order(${pagina},'sku','SKU')"> </th:block>-->
+                        <brewer:order page="${pagina}" field="sku" text="SKU"/>
+                    </th>
+                    <th class="table-cervejas-col-nome">
+                        <brewer:order page="${pagina}" field="nome" text="Nome"/>
+                    </th>
                     <th class="table-cervejas-col-estilo">Estilo</th>
                     <th class="table-cervejas-col-origem">Origem</th>
                     <th class="table-cervejas-col-valor">Valor</th>
@@ -111,7 +116,7 @@
                 </thead>
 
                 <tbody>
-                <tr th:each="cerveja : ${pagina.content}">
+                <tr th:each="cerveja : ${pagina.conteudo}">
                     <td class="text-center">
                         <img th:src="@{/fotos/thumbnail.{foto}(foto=${cerveja.fotoOuMock})}" class="img-responsive"/>
                     </td>
@@ -129,30 +134,14 @@
                         </a>
                     </td>
                 </tr>
-                <tr th:if="${#lists.isEmpty(pagina.content)}">
+                <tr th:if="${pagina.vazia}">
                     <td colspan="7">Nenhuma cerveja encontrada</td>
                 </tr>
+
                 </tbody>
             </table>
         </div>
-        <div class="col-sm-12 text-center" th:if="${not #lists.isEmpty(pagina.content)}">
-
-            <nav>
-                <ul class="pagination pagination-sm">
-                    <li class="disable"><a href="#"><span>&laquo;</span></a> </li>
-
-                    <th:block th:each="p : ${#numbers.sequence(1, pagina.totalPages)}">
-                        <li>
-                            <a th:href="|?page=${p - 1}|">[[${p}]]</a>
-                        </li>
-                    </th:block>
-
-
-                    <li class="disable"><a href="#"><span>&raquo;</span></a> </li>
-                </ul>
-            </nav>
-
-        </div>
+        <brewer:pagination page="${pagina}" />
     </div>
 </section>
 </body>

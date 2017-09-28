@@ -4,8 +4,10 @@ import com.algaworks.brewer.controllers.CervejasController;
 import com.algaworks.brewer.controllers.CidadesController;
 import com.algaworks.brewer.controllers.ClientesController;
 import com.algaworks.brewer.controllers.UsuariosController;
+import com.algaworks.brewer.controllers.converter.CidadeConverter;
 import com.algaworks.brewer.controllers.converter.EstiloConverter;
 import com.algaworks.brewer.thymeleaf.dialect.BrewerDialect;
+import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
 import com.sun.corba.se.spi.resolver.LocalResolver;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.BeansException;
@@ -62,6 +64,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         engine.setTemplateResolver(templateResolver());
         engine.addDialect(new LayoutDialect());
         engine.addDialect(new BrewerDialect());
+        engine.addDialect(new DataAttributeDialect());
         return engine;
     }
 
@@ -87,6 +90,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 
         DefaultFormattingConversionService defaultFormattingConversionService = new DefaultFormattingConversionService();
         defaultFormattingConversionService.addConverter(new EstiloConverter());
+        defaultFormattingConversionService.addConverter(new CidadeConverter());
 
         NumberStyleFormatter bigdecimaFormater = new NumberStyleFormatter("#,##0.00");
         NumberStyleFormatter integerFormater = new NumberStyleFormatter("#,##0");
