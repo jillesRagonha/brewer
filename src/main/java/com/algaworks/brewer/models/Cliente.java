@@ -1,7 +1,13 @@
 package com.algaworks.brewer.models;
 
+import com.algaworks.brewer.models.validation.ClienteGroupSequenceProvider;
+import com.algaworks.brewer.models.validation.group.CnpjGroup;
+import com.algaworks.brewer.models.validation.group.CpfGroup;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.br.CNPJ;
+import org.hibernate.validator.constraints.br.CPF;
+import org.hibernate.validator.group.GroupSequenceProvider;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "cliente")
+@GroupSequenceProvider(ClienteGroupSequenceProvider.class)
 public class Cliente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,11 +25,14 @@ public class Cliente implements Serializable {
     @NotBlank(message = "Nome é Obrigatório")
     private String nome;
 
-    @NotNull
+    @NotNull(message = "Escolha o tipo de pessoa")
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_pessoa")
     private TipoPessoa tipoPessoa;
 
+    @NotBlank(message = "CPF ou CNPJ obrigatório")
+    @CPF(message = "Número de CPF inválido", groups = CpfGroup.class)
+    @CNPJ(message = "Número de CNPJ Inválido", groups = CnpjGroup.class)
     @Column(name = "cpf_cnpj")
     private String cpfOuCnpj;
 
@@ -33,6 +43,18 @@ public class Cliente implements Serializable {
 
     @Embedded
     private Endereco endereco;
+
+    //tira formatacao de pontos no cpf ou cnpj
+    @PrePersist @PreUpdate
+    private void prePersistPreUpdate(){
+       this.cpfOuCnpj = TipoPessoa.removerFormatacao(this.cpfOuCnpj);
+
+    }
+
+    @PostLoad
+    private void postLoad() {
+        this.cpfOuCnpj = tipoPessoa.formatar(this.cpfOuCnpj);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -101,5 +123,10 @@ public class Cliente implements Serializable {
 
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
+    }
+
+    public String getCpfOuCnpjSemFormatacao(){
+        return TipoPessoa.removerFormatacao(this.cpfOuCnpj);
+
     }
 }

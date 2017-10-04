@@ -13,6 +13,23 @@ Brewer.MaskCep = (function() {
     return MaskCep;
 
 }());
+Brewer.MaskDate=(function () {
+    function MaskDate() {
+        this.inputDate = $('.js-date')
+        this.inputDate.mask("00/00/0000")
+        this.inputDate.datepicker({
+            orientation: 'bottom',
+            language: 'pt-BR',
+            autoclose: true
+        });
+    }
+
+
+    MaskDate.prototype.enable = function () {
+        
+    }
+    return MaskDate;
+}());
 
 Brewer.MaskMoney = (function () {
 
@@ -63,5 +80,8 @@ $(function () {
 
     var maskCep = new Brewer.MaskCep();
     maskCep.enable();
+
+    var maskDate = new Brewer.MaskDate();
+    maskDate.enable();
 
 });
