@@ -1,9 +1,11 @@
 package com.algaworks.brewer.controllers;
 
 import com.algaworks.brewer.models.Usuario;
+import com.algaworks.brewer.repository.Grupos;
 import com.algaworks.brewer.repository.Usuarios;
 import com.algaworks.brewer.service.CadastroUsuarioService;
 import com.algaworks.brewer.service.exception.EmailUsuarioJaCadastradoException;
+import com.algaworks.brewer.service.exception.SenhaObrigatoriaUsuarioException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -22,10 +24,13 @@ public class UsuariosController {
     private Usuarios usuarios;
     @Autowired
     private CadastroUsuarioService service;
+    @Autowired
+    private Grupos grupos;
 
     @RequestMapping("/novo")
     public ModelAndView novo(Usuario usuario) {
         ModelAndView modelAndView = new ModelAndView("usuario/CadastroUsuario");
+        modelAndView.addObject("grupos", grupos.findAll());
         return modelAndView;
     }
 
@@ -38,7 +43,10 @@ public class UsuariosController {
         try {
             service.salvar(usuario);
         } catch (EmailUsuarioJaCadastradoException e) {
-            result.rejectValue("email",e.getMessage(), e.getMessage());
+            result.rejectValue("email", e.getMessage(), e.getMessage());
+            return novo(usuario);
+        } catch (SenhaObrigatoriaUsuarioException e) {
+            result.rejectValue("senha", e.getMessage(), e.getMessage());
             return novo(usuario);
         }
 

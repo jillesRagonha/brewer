@@ -46,12 +46,12 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-sm-3 " brewer:classforerror="senha">
+                <div class="form-group col-sm-3 " brewer:classforerror="senha" th:classappend="${usuario.novoUsuario} ? bw-required">
                     <label for="senha">Senha</label>
                     <input type="password" id="senha" th:field="*{senha}" class="form-control">
                 </div>
 
-                <div class="form-group col-sm-3 " brewer:classforerror="confirmacaoSenha">
+                <div class="form-group col-sm-3 " brewer:classforerror="confirmacaoSenha" >
                     <label for="senhaConf" class="control-label">Confirmação de senha</label>
                     <input type="password" id="senhaConf" th:field="*{confirmacaoSenha}" class="form-control">
                 </div>
@@ -69,14 +69,14 @@
                 <div class="form-group col-sm-6  bw-required" brewer:classforerror="grupos">
                     <label class="control-label">Grupos</label>
                     <div>
-                        <div class="checkbox checkbox-inline">
-                            <input type="checkbox"/>
-                            <label>Administradores</label>
-                        </div>
-                        <div class="checkbox checkbox-inline">
-                            <input type="checkbox"/>
-                            <label>Vendedores</label>
-                        </div>
+                        <th:block th:each="grupo : ${grupos}">
+                            <div class="checkbox checkbox-inline">
+                                <input type="checkbox" th:field="*{grupos}" th:value="${grupo.codigo}"/>
+                                <label th:for="${#ids.prev('grupos')}"  th:text="${grupo.nome}">Administradores</label>
+                            </div>
+
+                        </th:block>
+
                     </div>
                 </div>
             </div>

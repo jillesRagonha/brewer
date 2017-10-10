@@ -7,6 +7,7 @@ import com.algaworks.brewer.controllers.UsuariosController;
 import com.algaworks.brewer.controllers.converter.CidadeConverter;
 import com.algaworks.brewer.controllers.converter.EstadoConverter;
 import com.algaworks.brewer.controllers.converter.EstiloConverter;
+import com.algaworks.brewer.controllers.converter.GrupoConverter;
 import com.algaworks.brewer.thymeleaf.dialect.BrewerDialect;
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
 import com.google.common.cache.CacheBuilder;
@@ -104,6 +105,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         defaultFormattingConversionService.addConverter(new EstiloConverter());
         defaultFormattingConversionService.addConverter(new EstadoConverter());
         defaultFormattingConversionService.addConverter(new CidadeConverter());
+        defaultFormattingConversionService.addConverter(new GrupoConverter());
 
         NumberStyleFormatter bigdecimaFormater = new NumberStyleFormatter("#,##0.00");
         NumberStyleFormatter integerFormater = new NumberStyleFormatter("#,##0");
