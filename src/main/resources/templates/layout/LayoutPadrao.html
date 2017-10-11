@@ -23,6 +23,8 @@
 </head>
 <body>
 <div class="aw-layout-page">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+    <input type="hidden" name="_csrf_header" th:value="${_csrf.headerName}" />
 
     <div th:replace="layout/fragments/BarraNavegacao :: navBar"></div>
 

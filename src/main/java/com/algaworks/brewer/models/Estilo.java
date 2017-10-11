@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "estilo")
@@ -43,14 +44,14 @@ public class Estilo implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Estilo estilo = (Estilo) o;
-
-        return codigo == estilo.codigo;
+        return Objects.equals(codigo, estilo.codigo) &&
+                Objects.equals(nome, estilo.nome) &&
+                Objects.equals(cervejas, estilo.cervejas);
     }
 
     @Override
     public int hashCode() {
-        return (int) (codigo ^ (codigo >>> 32));
+        return Objects.hash(codigo, nome, cervejas);
     }
 }
