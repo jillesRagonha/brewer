@@ -163,3 +163,10 @@
     font-family: 'FontAwesome';
     content: "\f00c";
 }
+
+/**
+Coluna pesquisa usuarios table usuarios
+ */
+.table-usuarios-col-status{
+    width: 30px;
+}
