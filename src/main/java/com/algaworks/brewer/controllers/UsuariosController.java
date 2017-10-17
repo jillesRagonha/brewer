@@ -5,9 +5,11 @@ import com.algaworks.brewer.repository.Grupos;
 import com.algaworks.brewer.repository.Usuarios;
 import com.algaworks.brewer.repository.filter.UsuarioFilter;
 import com.algaworks.brewer.service.CadastroUsuarioService;
+import com.algaworks.brewer.service.StatusUsuario;
 import com.algaworks.brewer.service.exception.EmailUsuarioJaCadastradoException;
 import com.algaworks.brewer.service.exception.SenhaObrigatoriaUsuarioException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +67,9 @@ public class UsuariosController {
     }
 
     @PutMapping("/status")
-    public void atualizarStatus(@RequestParam("codigos[]") Long[] codigos) {
-        Arrays.asList(codigos).forEach(System.out:: println);
+    @ResponseStatus(HttpStatus.OK)
+    public void atualizarStatus(@RequestParam("codigos[]") Long[] codigos, @RequestParam("status")StatusUsuario statusUsuario) {
+        service.alterarStatus(codigos, statusUsuario);
+
     }
 }

@@ -5,6 +5,7 @@ import com.algaworks.brewer.config.SecurityConfig;
 import com.algaworks.brewer.config.ServiceConfig;
 import com.algaworks.brewer.config.WebConfig;
 import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.HttpPutFormContentFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
@@ -30,8 +31,10 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected Filter[] getServletFilters() {
+        HttpPutFormContentFilter httpPutFormContentFilter = new HttpPutFormContentFilter();
 
-        return new Filter[]{};
+
+        return new Filter[]{httpPutFormContentFilter};
     }
 
     @Override

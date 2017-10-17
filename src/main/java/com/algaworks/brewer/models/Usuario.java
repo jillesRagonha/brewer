@@ -1,6 +1,7 @@
 package com.algaworks.brewer.models;
 
 import com.algaworks.brewer.validation.AtributoConfirmacao;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -14,6 +15,7 @@ import java.util.Objects;
 @AtributoConfirmacao(atributo="senha", atributoConfirmacao="confirmacaoSenha", message = "Senha e Confirmação de senha não confere")
 @Entity
 @Table(name = "usuario")
+@DynamicUpdate
 public class Usuario implements Serializable {
     private static final Long serialVersionUID = 1L;
     @Id
@@ -123,5 +125,11 @@ public class Usuario implements Serializable {
 
     public boolean isNovoUsuario() {
         return codigo == null;
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+
+        this.confirmacaoSenha = senha;
     }
 }

@@ -63,10 +63,11 @@
         </form>
 
         <div class="aw-datatable-toolbar">
-            <button class="btn btn-default btn-xs js-status-btn" data:status="ATIVAR">
+            <button class="btn btn-default  btn-xs  js-status-btn" data:status="ATIVAR">
                 <span>Ativar</span>
             </button>
-            <button class="btn btn-default btn-xs js-status-btn" data:status="DESATIVAR">
+
+            <button class="btn btn-default  btn-xs  js-status-btn" data:status="DESATIVAR">
                 <span>Desativar</span>
             </button>
         </div>
@@ -76,7 +77,7 @@
                 <thead>
                 <tr>
                     <th class="table-usuarios-col-status">
-                        <div class="checkbox aw-checkbox-no-margin">
+                        <div class="checkbox  aw-checkbox-no-margin">
                             <input type="checkbox"/>
                             <label></label>
                         </div>
@@ -92,16 +93,15 @@
                 <tbody>
                 <tr th:each="usuario : ${usuarios}">
                     <td>
-                        <div class="checkbox aw-checkbox-no-margin">
-                            <input type="checkbox" class="js-selecao" data:codigo="${usuario.codigo}"/>
-                            <label/>
+                        <div class="checkbox  aw-checkbox-no-margin">
+                            <input type="checkbox" class="js-selecao" data:codigo="${usuario.codigo}">
+                            <label></label>
                         </div>
                     </td>
                     <td th:text="${usuario.nome}"></td>
                     <td th:text="${usuario.email}"></td>
                     <td>
-                        <span th:each="grupo : ${usuario.grupos}"
-                              th:text="|${grupo.nome}${grupoStat.last ? '' : ', '}|"></span>
+                        <span th:each="grupo : ${usuario.grupos}" th:text="|${grupo.nome}${grupoStat.last ? '' : ', '}|"></span>
                     </td>
                     <td th:text="${usuario.ativo} ? Ativo : Inativo"></td>
                     <td class="text-center">
