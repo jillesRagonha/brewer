@@ -1,5 +1,7 @@
 package com.algaworks.brewer.controllers;
 
+import com.algaworks.brewer.controllers.page.PageWrapper;
+import com.algaworks.brewer.models.Cerveja;
 import com.algaworks.brewer.models.Usuario;
 import com.algaworks.brewer.repository.Grupos;
 import com.algaworks.brewer.repository.Usuarios;
@@ -9,6 +11,8 @@ import com.algaworks.brewer.service.StatusUsuario;
 import com.algaworks.brewer.service.exception.EmailUsuarioJaCadastradoException;
 import com.algaworks.brewer.service.exception.SenhaObrigatoriaUsuarioException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Arrays;
 
@@ -59,10 +64,11 @@ public class UsuariosController {
     }
 
     @GetMapping
-    public ModelAndView pesquisar(UsuarioFilter usuarioFilter) {
+    public ModelAndView pesquisar(UsuarioFilter usuarioFilter, @PageableDefault(size = 3) Pageable pageable, HttpServletRequest request ) {
         ModelAndView mv = new ModelAndView("/usuario/PesquisaUsuarios");
-        mv.addObject("usuarios", usuarios.filtrar(usuarioFilter));
         mv.addObject("grupos", grupos.findAll());
+        PageWrapper<Usuario> paginaWrapper = new PageWrapper<>(usuarios.filtrar(usuarioFilter, pageable),request);
+        mv.addObject("pagina", paginaWrapper);
         return mv;
     }
 
