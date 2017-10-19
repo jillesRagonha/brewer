@@ -3,6 +3,7 @@ package com.algaworks.brewer.models;
 import com.algaworks.brewer.models.validation.ClienteGroupSequenceProvider;
 import com.algaworks.brewer.models.validation.group.CnpjGroup;
 import com.algaworks.brewer.models.validation.group.CpfGroup;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -41,6 +42,7 @@ public class Cliente implements Serializable {
     @Email(message = "E-mail inválido")
     private String email;
 
+    @JsonIgnore
     @Embedded
     private Endereco endereco;
 

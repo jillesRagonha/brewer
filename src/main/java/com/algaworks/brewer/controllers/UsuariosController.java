@@ -64,17 +64,17 @@ public class UsuariosController {
     }
 
     @GetMapping
-    public ModelAndView pesquisar(UsuarioFilter usuarioFilter, @PageableDefault(size = 3) Pageable pageable, HttpServletRequest request ) {
+    public ModelAndView pesquisar(UsuarioFilter usuarioFilter, @PageableDefault(size = 3) Pageable pageable, HttpServletRequest request) {
         ModelAndView mv = new ModelAndView("/usuario/PesquisaUsuarios");
         mv.addObject("grupos", grupos.findAll());
-        PageWrapper<Usuario> paginaWrapper = new PageWrapper<>(usuarios.filtrar(usuarioFilter, pageable),request);
+        PageWrapper<Usuario> paginaWrapper = new PageWrapper<>(usuarios.filtrar(usuarioFilter, pageable), request);
         mv.addObject("pagina", paginaWrapper);
         return mv;
     }
 
     @PutMapping("/status")
     @ResponseStatus(HttpStatus.OK)
-    public void atualizarStatus(@RequestParam("codigos[]") Long[] codigos, @RequestParam("status")StatusUsuario statusUsuario) {
+    public void atualizarStatus(@RequestParam("codigos[]") Long[] codigos, @RequestParam("status") StatusUsuario statusUsuario) {
         service.alterarStatus(codigos, statusUsuario);
 
     }
