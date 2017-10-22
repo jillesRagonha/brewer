@@ -1,5 +1,6 @@
 package com.algaworks.brewer.repository.helper.cerveja;
 
+import com.algaworks.brewer.DTO.CervejaDTO;
 import com.algaworks.brewer.models.Cerveja;
 import com.algaworks.brewer.repository.filter.CervejaFilter;
 import com.algaworks.brewer.repository.paginacao.PaginacaoUtil;
@@ -34,12 +35,22 @@ public class CervejasImpl implements CervejasQueries {
     public Page<Cerveja> filtrar(CervejaFilter filter, Pageable pageable) {
         Criteria criteria = manager.unwrap(Session.class).createCriteria(Cerveja.class);
 
-        paginacaoUtil.preparar(criteria,pageable);
+        paginacaoUtil.preparar(criteria, pageable);
 
         adicionarFiltro(filter, criteria);
 
 
         return new PageImpl<Cerveja>(criteria.list(), pageable, total(filter));
+    }
+
+    @Override
+    public List<CervejaDTO> porSkuOuNome(String skuOuNome) {
+        String jpql = "SELECT new com.algaworks.brewer.DTO.CervejaDTO(codigo, nome, sku, origem, valor, foto)" +
+                " from Cerveja where lower(sku) like lower(:skuOuNome) or lower(nome) like lower(:skuOuNome)";
+        List<CervejaDTO> cervejasFiltradas = manager.createQuery(jpql, CervejaDTO.class)
+                .setParameter("skuOuNome", skuOuNome + "%")
+                .getResultList();
+        return cervejasFiltradas;
     }
 
     private void adicionarFiltro(CervejaFilter filter, Criteria criteria) {
@@ -76,7 +87,7 @@ public class CervejasImpl implements CervejasQueries {
     private Long total(CervejaFilter filtro) {
         Criteria criteria = manager.unwrap(Session.class).createCriteria(Cerveja.class);
         criteria.setProjection(Projections.rowCount());
-        adicionarFiltro(filtro,criteria);
+        adicionarFiltro(filtro, criteria);
         return (Long) criteria.uniqueResult();
     }
 
