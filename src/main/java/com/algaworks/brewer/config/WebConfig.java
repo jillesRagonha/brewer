@@ -8,6 +8,7 @@ import com.algaworks.brewer.controllers.converter.CidadeConverter;
 import com.algaworks.brewer.controllers.converter.EstadoConverter;
 import com.algaworks.brewer.controllers.converter.EstiloConverter;
 import com.algaworks.brewer.controllers.converter.GrupoConverter;
+import com.algaworks.brewer.session.TabelaItensVenda;
 import com.algaworks.brewer.thymeleaf.dialect.BrewerDialect;
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
 import com.google.common.cache.CacheBuilder;
@@ -50,7 +51,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@ComponentScan(basePackageClasses = {CervejasController.class, ClientesController.class, UsuariosController.class, CidadesController.class})
+@ComponentScan(basePackageClasses = {CervejasController.class, ClientesController.class, UsuariosController.class, CidadesController.class, TabelaItensVenda.class})
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @EnableCaching
