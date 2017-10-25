@@ -13,8 +13,8 @@ public class TabelaItensVendaTest {
     private TabelaItensVenda tabelaItensVenda;
 
     @Before
-    public void setUp(){
-        this.tabelaItensVenda = new TabelaItensVenda();
+    public void setUp() {
+        this.tabelaItensVenda = new TabelaItensVenda("1");
     }
 
     @Test
@@ -31,6 +31,7 @@ public class TabelaItensVendaTest {
         assertEquals(valor, tabelaItensVenda.getValorTotal());
 
     }
+
     @Test
     public void deveCalcularValorTotalComVariosItens() throws Exception {
         Cerveja cerveja1 = new Cerveja();
@@ -57,8 +58,35 @@ public class TabelaItensVendaTest {
         tabelaItensVenda.adicionarItem(c1, 1);
         tabelaItensVenda.adicionarItem(c1, 1);
 
-        assertEquals(1,tabelaItensVenda.total());
+        assertEquals(1, tabelaItensVenda.total());
         assertEquals(new BigDecimal("9.00"), tabelaItensVenda.getValorTotal());
+    }
+
+    @Test
+    public void deveExcluirItem() throws Exception {
+        Cerveja cerveja1 = new Cerveja();
+        cerveja1.setCodigo(1L);
+        BigDecimal valor1 = new BigDecimal("8.90");
+
+        Cerveja cerveja2 = new Cerveja();
+        BigDecimal valor2 = new BigDecimal("1.90");
+        cerveja2.setCodigo(2L);
+
+        Cerveja cerveja3 = new Cerveja();
+        BigDecimal valor3 = new BigDecimal("1.92");
+        cerveja3.setCodigo(3L);
+
+        cerveja1.setValor(valor1);
+        cerveja2.setValor(valor2);
+        cerveja3.setValor(valor3);
+
+        tabelaItensVenda.adicionarItem(cerveja1, 1);
+        tabelaItensVenda.adicionarItem(cerveja2, 1);
+        tabelaItensVenda.adicionarItem(cerveja3, 1);
+
+        tabelaItensVenda.excluirItem(cerveja2);
+        assertEquals(new BigDecimal("10.82"), tabelaItensVenda.getValorTotal());
+        assertEquals(2, tabelaItensVenda.total());
 
 
     }

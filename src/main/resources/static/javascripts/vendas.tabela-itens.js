@@ -1,11 +1,12 @@
-Brewer.TabelaItens = (function () {
+Brewer.TabelaItens = (function() {
 
     function TabelaItens(autocomplete) {
         this.autocomplete = autocomplete;
-        this.tabelasCervejasContainer = $('.js-tabela-cervejas-container');
+        this.tabelaCervejasContainer = $('.js-tabela-cervejas-container');
+        this.uuid = $('#uuid').val();
     }
 
-    TabelaItens.prototype.iniciar = function () {
+    TabelaItens.prototype.iniciar = function() {
         this.autocomplete.on('item-selecionado', onItemSelecionado.bind(this));
     }
 
@@ -14,23 +15,57 @@ Brewer.TabelaItens = (function () {
             url: 'item',
             method: 'POST',
             data: {
-                codigoCerveja: item.codigo
+                codigoCerveja: item.codigo,
+                uuid: this.uuid
             }
         });
 
-        resposta.done(onItemAdicionadoNoServidor.bind(this));
+        resposta.done(onItemAtualizadoNoServidor.bind(this));
     }
-    
-    function onItemAdicionadoNoServidor(html) {
-        this.tabelasCervejasContainer.html(html)
 
+    function onItemAtualizadoNoServidor(html) {
+        this.tabelaCervejasContainer.html(html);
+        $('.js-tabela-cerveja-quantidade-item').on('change', onQuantidadeItemAlterado.bind(this));
+        $('.js-tabela-item').on('dblclick', onDoubleClick);
+        $('.js-exclusao-item-btn').on('click', onExclusaoItemClick.bind(this));
+    }
+
+    function onQuantidadeItemAlterado(evento) {
+        var input = $(evento.target);
+        var quantidade = input.val();
+        var codigoCerveja = input.data('codigo-cerveja');
+
+        var resposta = $.ajax({
+            url: 'item/' + codigoCerveja,
+            method: 'PUT',
+            data: {
+                quantidade: quantidade,
+                uuid: this.uuid
+            }
+        });
+
+        resposta.done(onItemAtualizadoNoServidor.bind(this));
+    }
+
+    function onDoubleClick(evento) {
+        $(this).toggleClass('solicitando-exclusao');
+    }
+
+    function onExclusaoItemClick(evento) {
+        var codigoCerveja = $(evento.target).data('codigo-cerveja');
+        var resposta = $.ajax({
+            url: 'item/' +this.uuid + '/' + codigoCerveja,
+            method: 'DELETE'
+        });
+
+        resposta.done(onItemAtualizadoNoServidor.bind(this));
     }
 
     return TabelaItens;
 
 }());
 
-$(function () {
+$(function() {
 
     var autocomplete = new Brewer.Autocomplete();
     autocomplete.iniciar();

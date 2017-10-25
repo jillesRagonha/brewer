@@ -8,16 +8,14 @@ import com.algaworks.brewer.controllers.converter.CidadeConverter;
 import com.algaworks.brewer.controllers.converter.EstadoConverter;
 import com.algaworks.brewer.controllers.converter.EstiloConverter;
 import com.algaworks.brewer.controllers.converter.GrupoConverter;
-import com.algaworks.brewer.session.TabelaItensVenda;
+import com.algaworks.brewer.session.TabelaItensSession;
 import com.algaworks.brewer.thymeleaf.dialect.BrewerDialect;
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
 import com.google.common.cache.CacheBuilder;
-import com.sun.corba.se.spi.resolver.LocalResolver;
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import org.springframework.beans.BeansException;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.cache.guava.GuavaCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -26,6 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.data.repository.support.DomainClassConverter;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.number.NumberStyleFormatter;
@@ -51,7 +50,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@ComponentScan(basePackageClasses = {CervejasController.class, ClientesController.class, UsuariosController.class, CidadesController.class, TabelaItensVenda.class})
+@ComponentScan(basePackageClasses = {CervejasController.class, ClientesController.class, UsuariosController.class, CidadesController.class, TabelaItensSession.class})
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @EnableCaching
@@ -147,4 +146,8 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         return bundle;
     }
 
+    @Bean
+    public DomainClassConverter<FormattingConversionService> domainClassConverter(){
+        return new DomainClassConverter<FormattingConversionService>(mvcConversionService());
+    }
 }
