@@ -18,6 +18,11 @@
 ######################
 */
 
+/* Box */
+.negativo .aw-box__value {
+    color: red;
+}
+
 /* Field Action */
 .bw-field-action {
     display: flex;

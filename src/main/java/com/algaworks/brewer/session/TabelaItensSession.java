@@ -42,4 +42,8 @@ public class TabelaItensSession {
                 .findAny()
                 .orElse(new TabelaItensVenda(uuid));
     }
+
+    public Object getValorTotal(String uuid) {
+        return buscarTabelaPorUUID(uuid).getValorTotal();
+    }
 }

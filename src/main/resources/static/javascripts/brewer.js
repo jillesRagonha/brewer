@@ -94,6 +94,11 @@ Brewer.formatarMoeda = function(valor) {
     numeral.locale('pt-br');
     return numeral(valor).format('0,0.00');
 }
+Brewer.recuperarValor = function (valorFormatado) {
+    numeral.locale('pt-br');
+    return numeral(valorFormatado).value();
+
+}
 
 $(function() {
     var maskMoney = new Brewer.MaskMoney();
