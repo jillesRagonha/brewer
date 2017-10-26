@@ -1,12 +1,17 @@
 package com.algaworks.brewer.controllers;
 
 import com.algaworks.brewer.models.Cerveja;
+import com.algaworks.brewer.models.Venda;
 import com.algaworks.brewer.repository.Cervejas;
+import com.algaworks.brewer.security.UsuarioDoSistema;
+import com.algaworks.brewer.service.CadastroVendaService;
 import com.algaworks.brewer.session.TabelaItensSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
@@ -19,12 +24,24 @@ public class VendasController {
     private Cervejas cervejas;
     @Autowired
     private TabelaItensSession tabelaItens;
+    @Autowired
+    private CadastroVendaService vendaService;
 
     @GetMapping("/nova")
-    public ModelAndView nova() {
+    public ModelAndView nova(Venda venda) {
         ModelAndView mv = new ModelAndView("venda/CadastroVenda");
-        mv.addObject("uuid", UUID.randomUUID().toString());
+        venda.setUuid(UUID.randomUUID().toString());
         return mv;
+    }
+
+    @PostMapping("/nova")
+    public ModelAndView salvar(Venda venda, RedirectAttributes attributes, @AuthenticationPrincipal UsuarioDoSistema usuarioSistema) {
+        venda.setUsuario(usuarioSistema.getUsuario());
+        venda.adicionarItens(tabelaItens.getItens(venda.getUuid()));
+
+        vendaService.salvar(venda);
+        attributes.addFlashAttribute("mensagem", "Venda salva com sucesso");
+        return new ModelAndView("redirect:/vendas/nova");
     }
 
     @PostMapping("/item")

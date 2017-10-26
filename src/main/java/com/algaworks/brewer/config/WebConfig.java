@@ -1,9 +1,6 @@
 package com.algaworks.brewer.config;
 
-import com.algaworks.brewer.controllers.CervejasController;
-import com.algaworks.brewer.controllers.CidadesController;
-import com.algaworks.brewer.controllers.ClientesController;
-import com.algaworks.brewer.controllers.UsuariosController;
+import com.algaworks.brewer.controllers.*;
 import com.algaworks.brewer.controllers.converter.CidadeConverter;
 import com.algaworks.brewer.controllers.converter.EstadoConverter;
 import com.algaworks.brewer.controllers.converter.EstiloConverter;
@@ -50,7 +47,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@ComponentScan(basePackageClasses = {CervejasController.class, ClientesController.class, UsuariosController.class, CidadesController.class, TabelaItensSession.class})
+@ComponentScan(basePackageClasses = {CervejasController.class, ClientesController.class, UsuariosController.class, CidadesController.class, TabelaItensSession.class, VendasController.class})
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @EnableCaching
@@ -118,6 +115,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         //API de datas a partir de java 8
         DateTimeFormatterRegistrar dateTimeFormater = new DateTimeFormatterRegistrar();
         dateTimeFormater.setDateFormatter(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        dateTimeFormater.setTimeFormatter(DateTimeFormatter.ofPattern("HH:mm"));
         dateTimeFormater.registerFormatters(defaultFormattingConversionService);
 
         return defaultFormattingConversionService;

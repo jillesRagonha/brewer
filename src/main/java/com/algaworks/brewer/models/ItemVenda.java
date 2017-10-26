@@ -1,14 +1,28 @@
 package com.algaworks.brewer.models;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Entity
+@Table(name = "item_venda")
 public class ItemVenda {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
+
     private Integer quantidade;
+
+    @Column(name = "valor_unitario")
     private BigDecimal valorUnitario;
+
+    @ManyToOne
+    @JoinColumn(name = "codigo_cerveja")
     private Cerveja cerveja;
+
+    @ManyToOne
+    @JoinColumn(name = "codigo_venda")
+    private Venda venda;
 
     public Long getCodigo() {
         return codigo;
@@ -46,16 +60,36 @@ public class ItemVenda {
         return valorUnitario.multiply(new BigDecimal(quantidade));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemVenda itemVenda = (ItemVenda) o;
-        return Objects.equals(codigo, itemVenda.codigo);
+    public Venda getVenda() {
+        return venda;
+    }
+
+    public void setVenda(Venda venda) {
+        this.venda = venda;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(codigo);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ItemVenda other = (ItemVenda) obj;
+        if (codigo == null) {
+            if (other.codigo != null)
+                return false;
+        } else if (!codigo.equals(other.codigo))
+            return false;
+        return true;
     }
 }
