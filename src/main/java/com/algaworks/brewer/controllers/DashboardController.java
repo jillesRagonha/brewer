@@ -14,6 +14,5 @@ public class DashboardController {
         ModelAndView mv = new ModelAndView("Dashboard");
         return mv;
 
-
     }
 }

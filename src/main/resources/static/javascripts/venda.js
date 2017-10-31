@@ -25,7 +25,7 @@ Brewer.Venda = (function() {
     }
 
     function onTabelaItensAtualizada(evento, valorTotalItens) {
-        this.valorTotalItens = valorTotalItens == null ? 0 : valorTotalItens;
+        this.valorTotalItens = valorTotalItens == null ? 0 : numeral(valorTotalItens);
     }
 
     function onValorFreteAlterado(evento) {
@@ -38,7 +38,7 @@ Brewer.Venda = (function() {
 
     function onValoresAlterados() {
         var valorTotal = this.valorTotalItens + this.valorFrete - this.valorDesconto;
-        this.valorTotalBox.html(Brewer.formatarMoeda(valorTotal));
+        this.valorTotalBox.html(Brewer.formatarMoeda(valorTotal || 0));
 
         this.valorTotalBoxContainer.toggleClass('negativo', valorTotal < 0);
     }
