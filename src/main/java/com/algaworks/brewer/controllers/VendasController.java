@@ -1,5 +1,6 @@
 package com.algaworks.brewer.controllers;
 
+import com.algaworks.brewer.controllers.validator.VendaValidator;
 import com.algaworks.brewer.models.Cerveja;
 import com.algaworks.brewer.models.Venda;
 import com.algaworks.brewer.repository.Cervejas;
@@ -9,10 +10,14 @@ import com.algaworks.brewer.session.TabelaItensSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @Controller
@@ -27,17 +32,42 @@ public class VendasController {
     @Autowired
     private CadastroVendaService vendaService;
 
+    @Autowired
+    private VendaValidator vendaValidator;
+
+    @InitBinder
+    public void inicializarValidador(WebDataBinder binder) {
+        binder.setValidator(vendaValidator);
+    }
+
+
     @GetMapping("/nova")
     public ModelAndView nova(Venda venda) {
         ModelAndView mv = new ModelAndView("venda/CadastroVenda");
-        venda.setUuid(UUID.randomUUID().toString());
+
+        if (StringUtils.isEmpty(venda.getUuid())) {
+            venda.setUuid(UUID.randomUUID().toString());
+        }
+
+        mv.addObject("itens", venda.getItens());
+        mv.addObject("valorFrete", venda.getValorFrete());
+        mv.addObject("valorDesconto", venda.getValorDesconto());
+        mv.addObject("valorTotalItens", tabelaItens.getValorTotal(venda.getUuid()));
+
         return mv;
     }
 
     @PostMapping("/nova")
-    public ModelAndView salvar(Venda venda, RedirectAttributes attributes, @AuthenticationPrincipal UsuarioDoSistema usuarioSistema) {
-        venda.setUsuario(usuarioSistema.getUsuario());
+    public ModelAndView salvar(Venda venda, BindingResult result, RedirectAttributes attributes, @AuthenticationPrincipal UsuarioDoSistema usuarioSistema) {
         venda.adicionarItens(tabelaItens.getItens(venda.getUuid()));
+        venda.calcularValorTotal();
+
+        vendaValidator.validate(venda, result);
+        if (result.hasErrors()) {
+            return nova(venda);
+        }
+
+        venda.setUsuario(usuarioSistema.getUsuario());
 
         vendaService.salvar(venda);
         attributes.addFlashAttribute("mensagem", "Venda salva com sucesso");
