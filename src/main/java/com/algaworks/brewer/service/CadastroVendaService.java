@@ -1,6 +1,7 @@
 package com.algaworks.brewer.service;
 
 import com.algaworks.brewer.models.ItemVenda;
+import com.algaworks.brewer.models.StatusVenda;
 import com.algaworks.brewer.models.Venda;
 import com.algaworks.brewer.repository.Vendas;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,4 +33,9 @@ public class CadastroVendaService {
         vendas.save(venda);
     }
 
+    @Transactional
+    public void emitir(Venda venda) {
+        venda.setStatus(StatusVenda.EMITIDA);
+        salvar(venda);
+    }
 }
