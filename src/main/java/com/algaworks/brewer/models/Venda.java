@@ -192,7 +192,7 @@ public class Venda {
         return valorTotal;
     }
 
-    private BigDecimal getValorTotalItens() {
+    public BigDecimal getValorTotalItens() {
         return getItens().stream().map(ItemVenda::getValorTotal)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);

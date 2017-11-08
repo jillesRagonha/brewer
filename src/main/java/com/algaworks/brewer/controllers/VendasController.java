@@ -110,14 +110,13 @@ public class VendasController {
             return nova(venda);
         }
         venda.setUsuario(usuarioSistema.getUsuario());
-        vendaService.salvar(venda);
+        venda = vendaService.salvar(venda);
 
         mailer.enviar(venda);
 
-        attributes.addFlashAttribute("mensagem", "Venda salva e email enviado com sucesso");
+        attributes.addFlashAttribute("mensagem", String.format("Venda nº %d salva com sucesso e email enviado com sucesso", venda.getCodigo()));
         return new ModelAndView("redirect:/vendas/nova");
     }
-
 
 
     @PostMapping("/item")
@@ -149,7 +148,7 @@ public class VendasController {
     }
 
     @GetMapping
-    private ModelAndView pesqusiar(VendaFilter vendaFilter, BindingResult result, @PageableDefault(size = 3)Pageable pageable, HttpServletRequest httpServletRequest) {
+    private ModelAndView pesqusiar(VendaFilter vendaFilter, BindingResult result, @PageableDefault(size = 3) Pageable pageable, HttpServletRequest httpServletRequest) {
         ModelAndView mv = new ModelAndView("venda/PesquisaVendas");
         mv.addObject("todosStatus", StatusVenda.values());
         mv.addObject("tipoPessoa", TipoPessoa.values());

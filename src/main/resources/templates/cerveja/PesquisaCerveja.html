@@ -126,10 +126,12 @@
                     <td th:text="${cerveja.origem.descricao}">Internacional</td>
                     <td class="text-right" th:text="|R$ ${cerveja.valor}|">R$ 8.00</td>
                     <td class="text-center">
-                        <a class="btn  btn-link  btn-xs" title="Editar">
+                        <a class="btn  btn-link  btn-xs js-tooltip" title="Editar">
                             <i class="glyphicon glyphicon-pencil"></i>
                         </a>
-                        <a class="btn  btn-link  btn-xs" title="Excluir">
+                        <a class="btn  btn-link  btn-xs  js-tooltip  js-exclusao-btn" title="Excluir" href="#"
+                           data:url="@{/cervejas/{codigo}(codigo=${cerveja.codigo})}"
+                           data:objeto="${cerveja.nome}">
                             <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     </td>
@@ -141,8 +143,11 @@
                 </tbody>
             </table>
         </div>
-        <brewer:pagination page="${pagina}" />
+        <brewer:pagination page="${pagina}"/>
     </div>
 </section>
+<th:block layout:fragment="javascript-extra">
+    <script th:src="@{/javascripts/brewer.dialogo-excluir.js}"></script>
+</th:block>
 </body>
 </html>

@@ -25,10 +25,10 @@ public class MailConfig {
     public JavaMailSender mailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-        mailSender.setHost("smtp.mailgun.org");
+        mailSender.setHost("smtp.sendgrid.net");
         mailSender.setPort(587);
-        mailSender.setUsername(env.getProperty("email.username"));
-        mailSender.setPassword(env.getProperty("password"));
+        mailSender.setUsername(env.getProperty("email.username.sendgrid"));
+        mailSender.setPassword(env.getProperty("password.sendgrid"));
 
         System.out.println("usuario >>>>>>>>>>>>>>>" + env.getProperty("password"));
         Properties props = new Properties();

@@ -187,6 +187,10 @@ public class Cerveja {
         return codigo != null ? codigo.equals(cerveja.codigo) : cerveja.codigo == null;
     }
 
+    public boolean temFoto() {
+        return !StringUtils.isEmpty(this.foto);
+    }
+
     @Override
     public int hashCode() {
         return codigo != null ? codigo.hashCode() : 0;
