@@ -1,5 +1,7 @@
 package com.algaworks.brewer.models;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 @Entity
 @Table(name = "venda")
+@DynamicUpdate
 public class Venda {
 
     @Id
@@ -218,5 +221,12 @@ public class Venda {
         LocalDate inicio = dataCriacao != null ? dataCriacao.toLocalDate() : LocalDate.now();
         return ChronoUnit.DAYS.between(inicio, LocalDate.now());
 
+    }
+
+    public boolean isSalvarPermitido() {
+        return !status.equals(StatusVenda.CANCELADA);
+    }
+    public boolean isSalvarProibido() {
+        return !isSalvarPermitido();
     }
 }

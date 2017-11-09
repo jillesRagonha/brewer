@@ -5,6 +5,7 @@ import com.algaworks.brewer.models.StatusVenda;
 import com.algaworks.brewer.models.Venda;
 import com.algaworks.brewer.repository.Vendas;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,10 @@ public class CadastroVendaService {
 
     @Transactional
     public Venda salvar(Venda venda) {
+        if (venda.isSalvarProibido()) {
+            throw new RuntimeException("Usuário tentando salvar venda proibida");
+        }
+
         if (venda.isNova()) {
             venda.setDataCriacao(LocalDateTime.now());
         }else {
@@ -42,5 +47,13 @@ public class CadastroVendaService {
     public void emitir(Venda venda) {
         venda.setStatus(StatusVenda.EMITIDA);
         salvar(venda);
+    }
+
+    @PreAuthorize("#venda.usuario == principal.username or hasRole('CANCELAR_VENDA')") //verifica se o msm usuario que criou a venda eh o q esta cvancelando
+    @Transactional
+    public void cancelar(Venda venda) {
+        Venda vendaExistente = vendas.findOne(venda.getCodigo());
+        vendaExistente.setStatus(StatusVenda.CANCELADA);
+        vendas.save(vendaExistente);
     }
 }

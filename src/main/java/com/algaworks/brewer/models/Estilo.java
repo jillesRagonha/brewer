@@ -54,4 +54,8 @@ public class Estilo implements Serializable {
     public int hashCode() {
         return Objects.hash(codigo, nome, cervejas);
     }
+
+    public boolean isNovo() {
+        return codigo != null;
+    }
 }
