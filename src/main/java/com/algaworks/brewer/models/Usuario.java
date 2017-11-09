@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-@AtributoConfirmacao(atributo="senha", atributoConfirmacao="confirmacaoSenha", message = "Senha e Confirmação de senha não confere")
+@AtributoConfirmacao(atributo = "senha", atributoConfirmacao = "confirmacaoSenha", message = "Senha e Confirmação de senha não confere")
 @Entity
 @Table(name = "usuario")
 @DynamicUpdate
@@ -125,6 +125,10 @@ public class Usuario implements Serializable {
 
     public boolean isNovoUsuario() {
         return codigo == null;
+    }
+
+    public boolean isEdicao() {
+        return codigo != null;
     }
 
     @PreUpdate

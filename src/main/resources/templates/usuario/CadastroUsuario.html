@@ -12,8 +12,11 @@
 <section layout:fragment="conteudo">
     <div class="page-header">
         <div class="container-fluid">
-            <h1>
+            <h1 th:if="${usuario.novoUsuario}">
                 Cadastro de usuários
+            </h1>
+            <h1 th:unless="${usuario.novoUsuario}" th:text="|Edição do Usuário: ${usuario.nome}|">
+                Edição de usuário
             </h1>
 
         </div>
@@ -21,10 +24,10 @@
     <div class="container-fluid">
 
 
-
-        <form method="post" th:object="${usuario}" th:action="@{/usuarios/novo}" class="form-vertical  js-form-loading">
+        <form method="post" th:object="${usuario}" th:action="${usuario.novoUsuario} ? @{/usuarios/novo} :
+         @{/usuarios/{codigo}(codigo = ${usuario.codigo})}" class="form-vertical  js-form-loading">
             <brewer:message/>
-
+            <input type="hidden" th:field="*{codigo}">
             <div class="row">
                 <div class="form-group col-sm-12 bw-required" brewer:classforerror="nome">
                     <label for="nome" class="control-label">Nome</label>
@@ -46,17 +49,18 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-sm-3 " brewer:classforerror="senha" th:classappend="${usuario.novoUsuario} ? bw-required">
+                <div class="form-group col-sm-3 " brewer:classforerror="senha"
+                     th:classappend="${usuario.novoUsuario} ? bw-required">
                     <label for="senha">Senha</label>
                     <input type="password" id="senha" th:field="*{senha}" class="form-control">
                 </div>
 
-                <div class="form-group col-sm-3 " brewer:classforerror="confirmacaoSenha" >
+                <div class="form-group col-sm-3 " brewer:classforerror="confirmacaoSenha">
                     <label for="senhaConf" class="control-label">Confirmação de senha</label>
                     <input type="password" id="senhaConf" th:field="*{confirmacaoSenha}" class="form-control">
                 </div>
 
-                <div class="form-group col-sm-3 " >
+                <div class="form-group col-sm-3 " th:if="${#authentication.principal.usuario.codigo != usuario.codigo}">
                     <label class="control-label">Status</label>
                     <div>
                         <input type="checkbox" class="js-status" data-size="small" data-off-color="danger"
@@ -72,7 +76,7 @@
                         <th:block th:each="grupo : ${grupos}">
                             <div class="checkbox checkbox-inline">
                                 <input type="checkbox" th:field="*{grupos}" th:value="${grupo.codigo}"/>
-                                <label th:for="${#ids.prev('grupos')}"  th:text="${grupo.nome}">Administradores</label>
+                                <label th:for="${#ids.prev('grupos')}" th:text="${grupo.nome}">Administradores</label>
                             </div>
 
                         </th:block>

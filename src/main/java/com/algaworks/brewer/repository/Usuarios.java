@@ -13,4 +13,5 @@ public interface Usuarios extends JpaRepository<Usuario, Long>, UsuarioQueries {
 
     public List<Usuario> findByCodigoIn(Long[] codigos);
 
+
 }

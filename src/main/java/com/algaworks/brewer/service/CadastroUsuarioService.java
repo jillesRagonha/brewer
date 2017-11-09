@@ -22,25 +22,32 @@ public class CadastroUsuarioService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Usuario salvar(Usuario usuario) {
-        Optional<Usuario> usuarioOptional = usuarios.findByEmailIgnoreCase(usuario.getEmail());
-        if (usuarioOptional.isPresent()) {
-            throw new EmailUsuarioJaCadastradoException("Esse email já esta cadastrado no banco de dados");
+    public void salvar(Usuario usuario) {
+        Optional<Usuario> usuarioExistente = usuarios.findByEmailIgnoreCase(usuario.getEmail());
+        if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+            throw new EmailUsuarioJaCadastradoException("E-mail já cadastrado");
         }
 
         if (usuario.isNovoUsuario() && StringUtils.isEmpty(usuario.getSenha())) {
-            throw new SenhaObrigatoriaUsuarioException("Preencha a senha");
+            throw new SenhaObrigatoriaUsuarioException("Senha é obrigatória para novo usuário");
         }
 
-        if (usuario.isNovoUsuario()) {
+        if (usuario.isNovoUsuario() || !StringUtils.isEmpty(usuario.getSenha())) {
             usuario.setSenha(this.passwordEncoder.encode(usuario.getSenha()));
-            usuario.setConfirmacaoSenha(usuario.getSenha());
+        } else if (StringUtils.isEmpty(usuario.getSenha())) {
+            usuario.setSenha(usuarioExistente.get().getSenha());
         }
-        return usuarios.saveAndFlush(usuario);
+        usuario.setConfirmacaoSenha(usuario.getSenha());
+
+        if (!usuario.isNovoUsuario() && usuario.getAtivo() == null) {
+            usuario.setAtivo(usuarioExistente.get().getAtivo());
+        }
+
+        usuarios.save(usuario);
     }
 
     @Transactional
     public void alterarStatus(Long[] codigos, StatusUsuario statusUsuario) {
-        statusUsuario.executar(codigos,usuarios);
+        statusUsuario.executar(codigos, usuarios);
     }
 }

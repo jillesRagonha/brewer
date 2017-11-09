@@ -3,10 +3,7 @@ package com.algaworks.brewer.controllers;
 import com.algaworks.brewer.controllers.page.PageWrapper;
 import com.algaworks.brewer.controllers.validator.VendaValidator;
 import com.algaworks.brewer.mail.Mailer;
-import com.algaworks.brewer.models.Cerveja;
-import com.algaworks.brewer.models.StatusVenda;
-import com.algaworks.brewer.models.TipoPessoa;
-import com.algaworks.brewer.models.Venda;
+import com.algaworks.brewer.models.*;
 import com.algaworks.brewer.repository.Cervejas;
 import com.algaworks.brewer.repository.Vendas;
 import com.algaworks.brewer.repository.filter.VendaFilter;
@@ -55,9 +52,7 @@ public class VendasController {
     public ModelAndView nova(Venda venda) {
         ModelAndView mv = new ModelAndView("venda/CadastroVenda");
 
-        if (StringUtils.isEmpty(venda.getUuid())) {
-            venda.setUuid(UUID.randomUUID().toString());
-        }
+        setUuid(venda);
 
         mv.addObject("itens", venda.getItens());
         mv.addObject("valorFrete", venda.getValorFrete());
@@ -125,6 +120,27 @@ public class VendasController {
         tabelaItens.adicionarItem(uuid, cerveja, 1);
         return mvTabelaItensVenda(uuid);
 
+    }
+
+    @GetMapping("/{codigo}")
+    public ModelAndView editar(@PathVariable Long codigo) {
+        Venda venda = vendas.buscarComItens(codigo);
+
+        setUuid(venda);
+        for (ItemVenda item : venda.getItens()) {
+            tabelaItens.adicionarItem(venda.getUuid(), item.getCerveja(), item.getQuantidade());
+
+        }
+
+        ModelAndView mv = nova(venda);
+        mv.addObject(venda);
+        return mv;
+    }
+
+    private void setUuid(Venda venda) {
+        if (StringUtils.isEmpty(venda.getUuid())) {
+            venda.setUuid(UUID.randomUUID().toString());
+        }
     }
 
     @PutMapping("/item/{codigoCerveja}")

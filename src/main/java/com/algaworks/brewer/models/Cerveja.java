@@ -63,6 +63,9 @@ public class Cerveja {
 
     private String foto;
 
+    @Transient
+    private boolean novaFoto;
+
     @Column(name = "content_type")
     private String contentType;
 
@@ -200,5 +203,17 @@ public class Cerveja {
     @PreUpdate
     private void prePersistUpdate() {
         sku = sku.toUpperCase();
+    }
+
+    public boolean isNova() {
+        return codigo == null;
+    }
+
+    public boolean isNovaFoto() {
+        return novaFoto;
+    }
+
+    public void setNovaFoto(boolean novaFoto) {
+        this.novaFoto = novaFoto;
     }
 }

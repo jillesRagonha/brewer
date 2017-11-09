@@ -8,4 +8,6 @@ import org.springframework.data.domain.Pageable;
 public interface VendaQueries  {
 
     public Page<Venda> filtrar(VendaFilter vendaFilter, Pageable pageable);
+
+    public Venda buscarComItens(Long codigo);
 }

@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class UsuariosImpl implements UsuarioQueries {
+
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -92,5 +94,16 @@ public class UsuariosImpl implements UsuarioQueries {
                 criteria.add(Restrictions.and(subqueries.toArray(criterions)));
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Usuario buscarComGrupos(Long codigo) {
+        Criteria criteria = manager.unwrap(Session.class).createCriteria(Usuario.class);
+        criteria.createAlias("grupos", "g", JoinType.LEFT_OUTER_JOIN);
+        criteria.add(Restrictions.eq("codigo", codigo));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return (Usuario) criteria.uniqueResult();
+
     }
 }

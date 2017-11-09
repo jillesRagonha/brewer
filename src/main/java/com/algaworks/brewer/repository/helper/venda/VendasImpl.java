@@ -6,9 +6,8 @@ import com.algaworks.brewer.repository.filter.VendaFilter;
 import com.algaworks.brewer.repository.paginacao.PaginacaoUtil;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
+import org.hibernate.sql.JoinType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,6 +34,7 @@ public class VendasImpl implements VendaQueries {
         Criteria criteria = manager.unwrap(Session.class).createCriteria(Venda.class);
         paginacaoUtil.preparar(criteria, pageable);
         adicionarFiltro(vendaFilter, criteria);
+        criteria.addOrder((Order.asc("codigo")));
 
         return new PageImpl<>(criteria.list(), pageable, total(vendaFilter));
 
@@ -85,5 +85,15 @@ public class VendasImpl implements VendaQueries {
                 criteria.add(Restrictions.eq("c.cpfOuCnpj", TipoPessoa.removerFormatacao(filtro.getCpfOuCnpjCliente())));
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Venda buscarComItens(Long codigo) {
+        Criteria criteria = manager.unwrap(Session.class).createCriteria(Venda.class);
+        criteria.createAlias("itens", "i", JoinType.LEFT_OUTER_JOIN);
+        criteria.add(Restrictions.eq("codigo", codigo));
+        criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+        return (Venda) criteria.uniqueResult();
     }
 }

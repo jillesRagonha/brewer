@@ -44,8 +44,8 @@ public class CervejasController {
     private static final Logger logger = LoggerFactory.getLogger(CervejasController.class);
 
     //Método chamado pelo Spring quando eu fizer uma requisição do tipo GET
-    @RequestMapping("/novo")
-    public ModelAndView novo(Cerveja cerveja) {
+    @RequestMapping("/nova")
+    public ModelAndView nova(Cerveja cerveja) {
 
         ModelAndView mv = new ModelAndView("cerveja/CadastroCerveja");
         mv.addObject("sabores", Sabor.values());
@@ -55,19 +55,19 @@ public class CervejasController {
     }
 
     //Método chamado pelo Spring quando eu fizer uma requisição do tipo POST na mesma url
-    @RequestMapping(value = "/novo", method = RequestMethod.POST)
-    public ModelAndView cadastrarCerveja(@Valid Cerveja cerveja, BindingResult result, Model model, RedirectAttributes attributes) {
+    @RequestMapping(value = {"/nova", "{\\d+}"}, method = RequestMethod.POST)
+    public ModelAndView salvar(@Valid Cerveja cerveja, BindingResult result, Model model, RedirectAttributes attributes) {
 
         if (result.hasErrors()) {
-            return novo(cerveja);
+            return nova(cerveja);
         }
         service.salvar(cerveja);
         attributes.addFlashAttribute("mensagem", "Cerveja salva com sucesso");
-        return new ModelAndView("redirect:/cervejas/novo");
+        return new ModelAndView("redirect:/cervejas/nova");
     }
 
     @GetMapping
-    public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result, @PageableDefault(size = 2) Pageable pageable, HttpServletRequest request) {
+    public ModelAndView pesquisar(CervejaFilter cervejaFilter, BindingResult result, @PageableDefault(size = 5) Pageable pageable, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("cerveja/PesquisaCerveja");
         modelAndView.addObject("sabores", Sabor.values());
         modelAndView.addObject("estilos", estilos.findAll());
@@ -93,5 +93,12 @@ public class CervejasController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{codigo}")
+    public ModelAndView editar(@PathVariable("codigo") Cerveja cerveja) {
+        ModelAndView mv = nova(cerveja);
+        mv.addObject(cerveja);
+        return mv;
     }
 }
