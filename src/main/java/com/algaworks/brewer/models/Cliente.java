@@ -4,6 +4,7 @@ import com.algaworks.brewer.models.validation.ClienteGroupSequenceProvider;
 import com.algaworks.brewer.models.validation.group.CnpjGroup;
 import com.algaworks.brewer.models.validation.group.CpfGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "cliente")
 @GroupSequenceProvider(ClienteGroupSequenceProvider.class)
+@DynamicUpdate
 public class Cliente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,19 +58,6 @@ public class Cliente implements Serializable {
     @PostLoad
     private void postLoad() {
         this.cpfOuCnpj = tipoPessoa.formatar(this.cpfOuCnpj);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Cliente cliente = (Cliente) o;
-        return Objects.equals(codigo, cliente.codigo);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(codigo);
     }
 
     public Long getCodigo() {
@@ -130,5 +119,22 @@ public class Cliente implements Serializable {
     public String getCpfOuCnpjSemFormatacao(){
         return TipoPessoa.removerFormatacao(this.cpfOuCnpj);
 
+    }
+
+    public boolean isNovo() {
+        return codigo == null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cliente cliente = (Cliente) o;
+        return Objects.equals(codigo, cliente.codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo);
     }
 }

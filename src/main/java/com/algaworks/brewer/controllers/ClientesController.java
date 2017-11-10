@@ -8,6 +8,7 @@ import com.algaworks.brewer.repository.Estados;
 import com.algaworks.brewer.repository.filter.ClienteFilter;
 import com.algaworks.brewer.service.CadastroClienteService;
 import com.algaworks.brewer.service.exception.CpfClienteJaCadastradoException;
+import com.algaworks.brewer.service.exception.ImpossivelExcluirEntidadeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -40,12 +41,12 @@ public class ClientesController {
     @RequestMapping("/novo")
     public ModelAndView novo(Cliente cliente) {
         ModelAndView modelAndView = new ModelAndView("cliente/CadastroCliente");
-        modelAndView.addObject("tiposPessoa" ,TipoPessoa.values());
+        modelAndView.addObject("tiposPessoa", TipoPessoa.values());
         modelAndView.addObject("estados", estados.findAll());
         return modelAndView;
     }
 
-    @PostMapping("/novo")
+    @PostMapping({"/novo","\\d+"})
     public ModelAndView salvar(@Valid Cliente cliente, BindingResult result, RedirectAttributes attributes) {
         if (result.hasErrors()) {
             return novo(cliente);
@@ -62,7 +63,7 @@ public class ClientesController {
     }
 
     @GetMapping
-    public ModelAndView pesquisar(ClienteFilter clienteFilter, BindingResult result, @PageableDefault(size = 3)Pageable pageable, HttpServletRequest servletRequest) {
+    public ModelAndView pesquisar(ClienteFilter clienteFilter, BindingResult result, @PageableDefault(size = 5) Pageable pageable, HttpServletRequest servletRequest) {
         ModelAndView modelAndView = new ModelAndView("cliente/PesquisaCliente");
 
         PageWrapper<Cliente> paginaWrapper = new PageWrapper<>(clientes.filtrar(clienteFilter, pageable), servletRequest);
@@ -73,7 +74,8 @@ public class ClientesController {
     }
 
     @RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public  @ResponseBody  List<Cliente> pesquisar(String nome) {
+    public @ResponseBody
+    List<Cliente> pesquisar(String nome) {
 
         validarTamanhoNome(nome);
         return clientes.findByNomeIsContainingIgnoreCase(nome);
@@ -88,6 +90,27 @@ public class ClientesController {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Void> tratarIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.badRequest().build();
+    }
+
+
+    @DeleteMapping("/{codigo}")
+    public @ResponseBody
+    ResponseEntity<?> excluir(@PathVariable("codigo") Cliente cliente) {
+        try {
+            clienteService.excluir(cliente);
+        } catch (ImpossivelExcluirEntidadeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+
+    }
+
+    @GetMapping("/{codigo}")
+    public ModelAndView editar(@PathVariable Long codigo) {
+        Cliente cliente = clientes.encontrarCliente(codigo);
+        ModelAndView mv = novo(cliente);
+        mv.addObject(cliente);
+        return mv;
     }
 
 }
