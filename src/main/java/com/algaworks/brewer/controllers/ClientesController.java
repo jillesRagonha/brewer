@@ -50,7 +50,6 @@ public class ClientesController {
         if (result.hasErrors()) {
             return novo(cliente);
         }
-
         try {
             clienteService.salvar(cliente);
 
@@ -58,8 +57,6 @@ public class ClientesController {
             result.rejectValue("cpfOuCnpj", e.getMessage(), e.getMessage());
             return novo(cliente);
         }
-
-
         attributes.addFlashAttribute("mensagem", "Cliente salvo com sucesso");
         return new ModelAndView("redirect:/clientes/novo");
     }

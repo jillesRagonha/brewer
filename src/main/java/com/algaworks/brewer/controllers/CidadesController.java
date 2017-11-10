@@ -6,6 +6,7 @@ import com.algaworks.brewer.repository.Cidades;
 import com.algaworks.brewer.repository.Estados;
 import com.algaworks.brewer.repository.filter.CidadeFilter;
 import com.algaworks.brewer.service.CadastroCidadeService;
+import com.algaworks.brewer.service.exception.ImpossivelExcluirEntidadeException;
 import com.algaworks.brewer.service.exception.NomeCidadeJaCadastradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -13,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +55,7 @@ public class CidadesController {
         return cidades.findByEstadoCodigo(codigoEstado);
     }
 
-    @PostMapping("/novo")
+    @PostMapping({"/novo", "{\\d+}"})
     @CacheEvict(value = "cidades", key = "#cidade.estado.codigo", condition = "#cidade.temEstado()")
     public ModelAndView salvar(@Valid Cidade cidade, BindingResult result, RedirectAttributes attributes) {
         if (result.hasErrors()) {
@@ -81,6 +83,25 @@ public class CidadesController {
         modelAndView.addObject("pagina", paginaWrapper);
 
         return modelAndView;
+    }
+
+    @GetMapping("/{codigo}")
+    public ModelAndView editar(@PathVariable Long codigo) {
+        Cidade cidade = cidades.buscarComEstados(codigo);
+        ModelAndView mv = novo(cidade);
+        mv.addObject(cidade);
+        return mv;
+    }
+
+    @DeleteMapping("/{codigo}")
+    public @ResponseBody
+    ResponseEntity<?> excluir(@PathVariable("codigo") Cidade cidade) {
+        try {
+            cadastroCidadeService.excluir(cidade);
+        } catch (ImpossivelExcluirEntidadeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
     }
 }
 

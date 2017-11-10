@@ -5,6 +5,7 @@ import com.algaworks.brewer.models.Estilo;
 import com.algaworks.brewer.repository.Estilos;
 import com.algaworks.brewer.repository.filter.EstiloFilter;
 import com.algaworks.brewer.service.CadastroEstiloService;
+import com.algaworks.brewer.service.exception.ImpossivelExcluirEntidadeException;
 import com.algaworks.brewer.service.exception.NomeEstiloJaCadastradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -33,11 +34,10 @@ public class EstilosController {
     @RequestMapping("/novo")
     public ModelAndView novo(Estilo estilo) {
         ModelAndView mv = new ModelAndView("estilo/CadastroEstilo");
-
         return mv;
     }
 
-    @RequestMapping(value = "/novo", method = RequestMethod.POST)
+    @PostMapping({"/novo", "\\d+"})
     public ModelAndView cadastrarNovoEstilo(@Valid Estilo estilo, BindingResult result, RedirectAttributes attributes) {
         if (result.hasErrors()) {
             return novo(estilo);
@@ -67,10 +67,29 @@ public class EstilosController {
     }
 
     @GetMapping
-    public ModelAndView pesquisar(EstiloFilter filter, BindingResult result, @PageableDefault(size = 2) Pageable pageable, HttpServletRequest request) {
+    public ModelAndView pesquisar(EstiloFilter filter, BindingResult result, @PageableDefault(size = 5) Pageable pageable, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView("estilo/PesquisaEstilos");
         PageWrapper<Estilo> pageWrapper = new PageWrapper<>(estilos.filtrar(filter, pageable), request);
-        modelAndView.addObject("pagina",pageWrapper);
+        modelAndView.addObject("pagina", pageWrapper);
         return modelAndView;
+    }
+
+    @DeleteMapping("/{codigo}")
+    public @ResponseBody
+    ResponseEntity<?> excluir(@PathVariable("codigo") Estilo estilo) {
+        try {
+            service.excluir(estilo);
+        } catch (ImpossivelExcluirEntidadeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{codigo}")
+    public ModelAndView editar(@PathVariable Long codigo) {
+        Estilo estilo = estilos.buscarEstilo(codigo);
+        ModelAndView mv = novo(estilo);
+        mv.addObject(estilo);
+        return mv;
     }
 }

@@ -8,4 +8,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface CidadesQueries {
     public Page<Cidade> filtrar(CidadeFilter cidadeFilter, Pageable pageable);
+
+    public Cidade buscarComEstados(Long codigo);
 }

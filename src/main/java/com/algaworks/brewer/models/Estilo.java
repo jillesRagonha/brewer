@@ -6,7 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "estilo")
@@ -18,17 +17,22 @@ public class Estilo implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
 
-    @Size(max = 35, min = 1, message = "O campo precisa ter no máximo 35 caracteres e no mínimo 1")
+    @NotBlank(message = "O nome é obrigatório")
+    @Size(max = 20, message = "O tamanho do nome não pode ser maior que {max} caracteres")
     private String nome;
 
     @OneToMany(mappedBy = "estilo")
     private List<Cerveja> cervejas;
 
+    public boolean isNovo() {
+        return codigo == null;
+    }
+
     public Long getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(long codigo) {
+    public void setCodigo(Long codigo) {
         this.codigo = codigo;
     }
 
@@ -41,21 +45,27 @@ public class Estilo implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Estilo estilo = (Estilo) o;
-        return Objects.equals(codigo, estilo.codigo) &&
-                Objects.equals(nome, estilo.nome) &&
-                Objects.equals(cervejas, estilo.cervejas);
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+        return result;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(codigo, nome, cervejas);
-    }
-
-    public boolean isNovo() {
-        return codigo != null;
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Estilo other = (Estilo) obj;
+        if (codigo == null) {
+            if (other.codigo != null)
+                return false;
+        } else if (!codigo.equals(other.codigo))
+            return false;
+        return true;
     }
 }

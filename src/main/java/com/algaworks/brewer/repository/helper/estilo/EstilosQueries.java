@@ -9,4 +9,5 @@ public interface EstilosQueries {
 
     public Page<Estilo> filtrar(EstiloFilter filter, Pageable pageable);
 
+    public Estilo buscarEstilo(Long codigo);
 }

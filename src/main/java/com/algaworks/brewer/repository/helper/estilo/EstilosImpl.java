@@ -52,4 +52,12 @@ public class EstilosImpl implements EstilosQueries {
             }
         }
     }
+
+    @Transactional
+    @Override
+    public Estilo buscarEstilo(Long codigo) {
+        Criteria criteria = manager.unwrap(Session.class).createCriteria(Estilo.class);
+        criteria.add(Restrictions.eq("codigo", codigo));
+        return (Estilo)criteria.uniqueResult();
+    }
 }
