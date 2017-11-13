@@ -12,24 +12,24 @@
 
     <properties>
 
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
-        <java.version>1.8</java.version>
-        <maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
-        <spring-framework.version>4.3.0.RELEASE</spring-framework.version>
-        <servlet-api.version>3.1.0</servlet-api.version>
-        <thymeleaf.version>3.0.7.RELEASE</thymeleaf.version>
-        <hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
-        <thymeleaf-layout-dialect.version>2.0.0</thymeleaf-layout-dialect.version>
-        <log4j.version>2.6</log4j.version>
-        <jcl-over-slf4j.version>1.7.26</jcl-over-slf4j.version>
-        <hibernate.version>5.1.0.Final</hibernate.version>
-        <flywaydb.version>4.0.2</flywaydb.version>
-        <mysql-connector-java.version>5.1.39</mysql-connector-java.version>
-        <spring-data-jpa.version>1.11.6.RELEASE</spring-data-jpa.version>
-        <guava.version>19.0</guava.version>
-    </properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <failOnMissingWebXml>false</failOnMissingWebXml>
+    <java.version>1.8</java.version>
+    <maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
+    <spring-framework.version>4.3.0.RELEASE</spring-framework.version>
+    <servlet-api.version>3.1.0</servlet-api.version>
+    <thymeleaf.version>3.0.7.RELEASE</thymeleaf.version>
+    <hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
+    <thymeleaf-layout-dialect.version>2.0.0</thymeleaf-layout-dialect.version>
+    <log4j.version>2.6</log4j.version>
+    <jcl-over-slf4j.version>1.7.26</jcl-over-slf4j.version>
+    <hibernate.version>5.1.0.Final</hibernate.version>
+    <flywaydb.version>4.0.2</flywaydb.version>
+    <mysql-connector-java.version>5.1.39</mysql-connector-java.version>
+    <spring-data-jpa.version>1.11.6.RELEASE</spring-data-jpa.version>
+    <guava.version>19.0</guava.version>
+</properties>
     <build>
         <finalName>brewer</finalName>
         <plugins>
