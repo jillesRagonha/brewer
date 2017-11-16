@@ -4,7 +4,9 @@ import com.algaworks.brewer.models.ItemVenda;
 import com.algaworks.brewer.models.StatusVenda;
 import com.algaworks.brewer.models.Venda;
 import com.algaworks.brewer.repository.Vendas;
+import com.algaworks.brewer.service.event.venda.VendaEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,9 @@ public class CadastroVendaService {
 
     @Autowired
     private Vendas vendas;
+
+    @Autowired
+    ApplicationEventPublisher publisher;
 
     @Transactional
     public Venda salvar(Venda venda) {
@@ -47,6 +52,8 @@ public class CadastroVendaService {
     public void emitir(Venda venda) {
         venda.setStatus(StatusVenda.EMITIDA);
         salvar(venda);
+
+        publisher.publishEvent(new VendaEvent(venda));
     }
 
     @PreAuthorize("#venda.usuario == principal.username or hasRole('CANCELAR_VENDA')") //verifica se o msm usuario que criou a venda eh o q esta cvancelando

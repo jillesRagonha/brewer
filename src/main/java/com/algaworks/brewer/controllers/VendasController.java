@@ -1,5 +1,7 @@
 package com.algaworks.brewer.controllers;
 
+import com.algaworks.brewer.DTO.VendaMes;
+import com.algaworks.brewer.DTO.VendaOrigem;
 import com.algaworks.brewer.controllers.page.PageWrapper;
 import com.algaworks.brewer.controllers.validator.VendaValidator;
 import com.algaworks.brewer.mail.Mailer;
@@ -25,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -188,6 +191,18 @@ public class VendasController {
         attributes.addFlashAttribute("mensagem", "Venda cancelada com sucesso");
         return new ModelAndView("redirect:/vendas/" + venda.getCodigo());
 
+    }
+
+    @GetMapping("/totalPorMes")
+    public @ResponseBody
+    List<VendaMes> listarTotalVendasPorMes() {
+        return vendas.totalPorMes();
+    }
+
+    @GetMapping("/porOrigem")
+    public @ResponseBody
+    List<VendaOrigem> vendasPorNacionalidade() {
+        return this.vendas.totalPorOrigem();
     }
 }
 

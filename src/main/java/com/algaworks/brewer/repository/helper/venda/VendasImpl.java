@@ -1,5 +1,7 @@
 package com.algaworks.brewer.repository.helper.venda;
 
+import com.algaworks.brewer.DTO.VendaMes;
+import com.algaworks.brewer.DTO.VendaOrigem;
 import com.algaworks.brewer.models.StatusVenda;
 import com.algaworks.brewer.models.TipoPessoa;
 import com.algaworks.brewer.models.Venda;
@@ -20,8 +22,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.*;
+import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("unchecked")
 public class VendasImpl implements VendaQueries {
 
     @PersistenceContext
@@ -114,7 +118,7 @@ public class VendasImpl implements VendaQueries {
     @Transactional
     @Override
     public BigDecimal valorTotalNoMes() {
-        Optional<BigDecimal> optional  = Optional.ofNullable(manager.createQuery
+        Optional<BigDecimal> optional = Optional.ofNullable(manager.createQuery
                 ("select  sum(valorTotal) from Venda where month(dataCriacao) = :mes and status= :status", BigDecimal.class)
                 .setParameter("mes", MonthDay.now().getMonthValue())
                 .setParameter("status", StatusVenda.EMITIDA)
@@ -132,4 +136,46 @@ public class VendasImpl implements VendaQueries {
 
         return optional.orElse(BigDecimal.ZERO);
     }
+
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<VendaMes> totalPorMes() {
+        List<VendaMes> vendasMes = manager.createNamedQuery("Vendas.totalPorMes").getResultList();
+
+        LocalDate hoje = LocalDate.now();
+        for (int i = 1; i <= 6; i++) {
+
+            String mesIdeal = String.format("%d/%02d", hoje.getYear(), hoje.getMonthValue());
+            boolean possuiMes = vendasMes.stream().filter(v -> v.getMes().equals(mesIdeal)).findAny().isPresent();
+            if (!possuiMes) {
+                vendasMes.add(i - 1, new VendaMes(mesIdeal, 0));
+
+            }
+            hoje = hoje.minusMonths(1);
+        }
+
+        return vendasMes;
+    }
+
+    @Override
+    public List<VendaOrigem> totalPorOrigem() {
+        List<VendaOrigem> vendasNacionalidade = manager.createNamedQuery("Vendas.porOrigem", VendaOrigem.class).getResultList();
+
+        LocalDate now = LocalDate.now();
+        for (int i = 1; i <= 6; i++) {
+            String mesIdeal = String.format("%d/%02d", now.getYear(), now.getMonth().getValue());
+
+            boolean possuiMes = vendasNacionalidade.stream().filter(v -> v.getMes().equals(mesIdeal)).findAny().isPresent();
+            if (!possuiMes) {
+                vendasNacionalidade.add(i - 1, new VendaOrigem(mesIdeal, 0, 0));
+            }
+
+            now = now.minusMonths(1);
+        }
+
+        return vendasNacionalidade;
+    }
+
+
 }
