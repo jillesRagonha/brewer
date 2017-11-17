@@ -5,6 +5,7 @@ import com.algaworks.brewer.DTO.ValorItensEstoque;
 import com.algaworks.brewer.models.Cerveja;
 import com.algaworks.brewer.repository.filter.CervejaFilter;
 import com.algaworks.brewer.repository.paginacao.PaginacaoUtil;
+import com.algaworks.brewer.storage.FotoStorage;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
@@ -33,6 +34,9 @@ public class CervejasImpl implements CervejasQueries {
     @Autowired
     private PaginacaoUtil paginacaoUtil;
 
+    @Autowired
+    private FotoStorage fotoStorage;
+
     @Override
     @Transactional(readOnly = true)
     public Page<Cerveja> filtrar(CervejaFilter filter, Pageable pageable) {
@@ -53,6 +57,7 @@ public class CervejasImpl implements CervejasQueries {
         List<CervejaDTO> cervejasFiltradas = manager.createQuery(jpql, CervejaDTO.class)
                 .setParameter("skuOuNome", skuOuNome + "%")
                 .getResultList();
+        cervejasFiltradas.forEach(c -> c.setUrlThumbnailFoto(fotoStorage.getUrl(FotoStorage.THUMBNAIL_PREFIX + c.getFoto())));
         return cervejasFiltradas;
     }
 

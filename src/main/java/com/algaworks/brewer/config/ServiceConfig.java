@@ -8,11 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackageClasses = CadastroCervejaService.class)
+@ComponentScan(basePackageClasses = {CadastroCervejaService.class, FotoStorage.class})
 public class ServiceConfig {
 
-    @Bean
-    public FotoStorage fotoStorage(){
-        return new FotoStorageLocal();
-    }
 }

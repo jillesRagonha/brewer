@@ -1,6 +1,7 @@
 package com.algaworks.brewer.models;
 
 
+import com.algaworks.brewer.repository.listener.CervejaEntityListener;
 import com.algaworks.brewer.validation.SKU;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -11,6 +12,7 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
 
+@EntityListeners(CervejaEntityListener.class)
 @Entity
 @Table(name = "cerveja")
 public class Cerveja {
@@ -18,6 +20,12 @@ public class Cerveja {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
+
+    @Transient
+    private String urlFoto;
+
+    @Transient
+    private String urlThumbnailFoto;
 
     @SKU
     @NotBlank(message = "Campo SKU precisa ser preenchido")
@@ -215,5 +223,21 @@ public class Cerveja {
 
     public void setNovaFoto(boolean novaFoto) {
         this.novaFoto = novaFoto;
+    }
+
+    public String getUrlFoto() {
+        return urlFoto;
+    }
+
+    public void setUrlFoto(String urlFoto) {
+        this.urlFoto = urlFoto;
+    }
+
+    public String getUrlThumbnailFoto() {
+        return urlThumbnailFoto;
+    }
+
+    public void setUrlThumbnailFoto(String urlThumbnailFoto) {
+        this.urlThumbnailFoto = urlThumbnailFoto;
     }
 }

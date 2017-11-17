@@ -110,6 +110,7 @@ public class VendasController {
             return nova(venda);
         }
         venda.setUsuario(usuarioSistema.getUsuario());
+
         venda = vendaService.salvar(venda);
 
         mailer.enviar(venda);

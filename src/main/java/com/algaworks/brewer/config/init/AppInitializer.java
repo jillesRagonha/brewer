@@ -5,15 +5,13 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HttpPutFormContentFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.Filter;
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletRegistration;
+import javax.servlet.*;
 
 public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
     protected Class<?>[] getRootConfigClasses() {
 
-        return new Class<?>[]{JPAConfig.class, ServiceConfig.class, SecurityConfig.class};
+        return new Class<?>[]{JPAConfig.class, ServiceConfig.class, SecurityConfig.class, S3Config.class};
     }
 
     @Override
@@ -37,5 +35,12 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
     @Override
     protected void customizeRegistration(ServletRegistration.Dynamic registration) {
         registration.setMultipartConfig(new MultipartConfigElement(""));
+    }
+
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+        servletContext.setInitParameter("spring.profiles.default", "local");
     }
 }

@@ -2,7 +2,6 @@ package com.algaworks.brewer.service;
 
 import com.algaworks.brewer.models.Cerveja;
 import com.algaworks.brewer.repository.Cervejas;
-import com.algaworks.brewer.service.event.cerveja.CervejaSalvaEvento;
 import com.algaworks.brewer.service.exception.ImpossivelExcluirEntidadeException;
 import com.algaworks.brewer.storage.FotoStorage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +25,6 @@ public class CadastroCervejaService {
     @Transactional
     public void salvar(Cerveja cerveja) {
         cervejas.save(cerveja);
-
-        publisher.publishEvent(new CervejaSalvaEvento(cerveja));
     }
 
     @Transactional
@@ -35,7 +32,7 @@ public class CadastroCervejaService {
 
         try {
             String nomeFoto = cerveja.getFoto();
-                        cervejas.delete(cerveja);
+            cervejas.delete(cerveja);
             cervejas.flush();
             fotoStorage.excluir(nomeFoto);
         } catch (PersistenceException e) {
